@@ -2,7 +2,7 @@
   "name": "nextjs-google-sheets-database",
   "version": "1.0.0",
   "description": "Use Google Sheets as a Database",
-  "main": "index.js",
+  "main": "pages/index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
