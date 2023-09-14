@@ -12,8 +12,9 @@ export default async function handler(req, res) {
     });
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
-    if (guest.id == -1) {
-      const lastRow = await sheet.getRows({ limit: 1, offset: sheet.rowCount - 3 });
+    console.log(guest.id);
+    if (guest.id == -1 || guest.id == undefined) {
+      const lastRow = await sheet.getRows({ limit: 1, offset: sheet.rowCount - 2 });
       const lastID = lastRow.length > 0 ? parseInt(lastRow[0].id) : 0;
       const nextID = lastID + 1;
 
