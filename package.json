@@ -20,11 +20,13 @@
   },
   "homepage": "https://github.com/PaulieScanlon/nextjs-google-sheets-database#readme",
   "dependencies": {
+    "antd": "^5.9.0",
     "google-spreadsheet": "^3.3.0",
     "motion": "^10.14.2",
     "next": "^12.3.1",
     "react": "^17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-spinners": "^0.13.8"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.7",

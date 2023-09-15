@@ -19,47 +19,46 @@ export default async function handler(req, res) {
       const nextID = lastID + 1;
 
       // Update the guest object with the auto-incremented ID
-      guest.id = nextID;
+      guest.id = nextID + 1;
       await sheet.addRow(guest);
     } else {
       await sheet.loadCells();
 
-      const rowList = sheet.getRows();
+      // const rowList = await sheet.getRows();
       const rows = [];
-
-      for (const row of rowList) {
-        const cellValue = row.getCell(0).value; // Assuming the first column is index 0
-
-        if (cellValue === targetValue) {
-          rows.push(row);
+      let found = false;
+      let rowIndex = 0;
+      while (!found && rowIndex < sheet.rowCount) {
+        const cellValue = sheet.getCell(rowIndex, 0).value;
+        if (cellValue === guest.id) {
+          console.log(found);
+          sheet.getCell(rowIndex, 1).value = guest.nama_tamu;
+          sheet.getCell(rowIndex, 2).value = guest.asal_tamu;
+          sheet.getCell(rowIndex, 4).value = guest.jumlah_datang;
+          const rowNumber = parseInt(guest.id) + 1;
+          sheet.getCell(rowIndex, 5).value = `=D${rowNumber}-E${rowNumber}`;
+          console.log(found);
+          found = true;
+          await sheet.saveUpdatedCells();
         }
+        rowIndex += 1;
       }
-      if (rows.length > 0) {
-        let rowToUpdate = rows[0];
-        rowToUpdate.nama_tamu = guest.nama_tamu;
-        rowToUpdate.asal_tamu = guest.asal_tamu;
-        rowToUpdate.jumlah_datang = guest.jumlah_datang;
-        // console.log(rowToUpdate.id);
-        const rowNumber = parseInt(guest.id) + 1;
-        guest.selisih = `=D${rowNumber}-E${rowNumber}`;
-
-        // Save the changes to the Google Sheet
-        await guest.save();
-      } else {
+      console.log(`is found ${found}`);
+      if (!found) {
         const lastRow = await sheet.getRows({ limit: 1, offset: sheet.rowCount - 3 });
         const lastID = lastRow.length > 0 ? parseInt(lastRow[0].id) : 0;
         const nextID = lastID + 1;
 
         // Update the guest object with the auto-incremented ID
-        guest.id = nextID;
+        guest.id = nextID + 1;
         const rowNumber = parseInt(guest.id) + 1;
-        rowToUpdate.selisih = `=D${rowNumber}-E${rowNumber}`;
+        guest.selisih = `=D${rowNumber}-E${rowNumber}`;
         await sheet.addRow(guest);
       }
 
     }
 
-    res.status(200).json({ message: 'A ok!', total: '', data: {} });
+    res.status(200).json({ message: 'A ok!', total: 1, data: guest });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
